@@ -1,0 +1,33 @@
+{
+  "name": "btc-preco",
+  "version": "1.0.0",
+  "description": "A project for check btc value",
+  "main": "./src/main.js",
+  "scripts": {
+    "prepush": "npm run coverage",
+    "coverage": "nyc npm test",
+    "test": "./node_modules/.bin/mocha tests/**/*.spec.js -R progress -r chai/register-expect.js"
+  },
+  "keywords": [
+    "bitcoin",
+    "btc"
+  ],
+  "nyc": {
+    "functions": 0,
+    "lines": 0,
+    "check-coverage": true,
+    "reporter": ["text", "html"]
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/israelcena/btc-preco.git"
+  },
+  "author": "IsraelCena",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^5.1.0",
+    "mocha": "^10.3.0",
+    "nyc": "^15.1.0"
+  }
+}
