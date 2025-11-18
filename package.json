@@ -39,9 +39,17 @@
     "@babel/core": "^7.23.9",
     "@babel/preset-env": "^7.23.9",
     "@babel/register": "^7.23.7",
+    "axios-mock-adapter": "^2.1.0",
     "chai": "^5.1.0",
     "mocha": "^10.3.0",
+    "nock": "^14.0.10",
     "nyc": "^15.1.0",
-    "rimraf": "^5.0.5"
+    "rimraf": "^5.0.5",
+    "sinon": "^21.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.13.2",
+    "chalk": "^5.6.2",
+    "commander": "^14.0.2"
   }
 }
