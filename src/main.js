@@ -103,7 +103,7 @@ async function run() {
     program
         .name('btc-preco')
         .description('Check Bitcoin price in real-time')
-        .version('1.0.0')
+        .version('1.1.0')
         .option('-c, --currency <type>', 'Currency code (USD, BRL, EUR, GBP, JPY, ARS, CNY, INR, KRW, MXN)', 'USD')
         .action(async (options) => {
             try {
