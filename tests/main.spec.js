@@ -42,48 +42,43 @@ describe('BTC-Preco CLI Tests', () => {
     describe('fetchBitcoinPrice', () => {
         it('Should fetch Bitcoin price in USD', async () => {
             const mockData = {
-                time: { updated: 'Nov 18, 2025 00:00:00 UTC' },
-                bpi: {
-                    USD: {
-                        code: 'USD',
-                        symbol: '$',
-                        rate: '50,000.00',
-                        description: 'United States Dollar'
-                    }
-                }
+                bitcoin: {
+                    usd: 50000,
+                    last_updated_at: 1731888000,
+                },
             };
 
-            mock.onGet('https://api.coindesk.com/v1/bpi/currentprice/USD.json')
+            mock.onGet('https://api.coingecko.com/api/v3/simple/price')
                 .reply(200, mockData);
 
             const result = await fetchBitcoinPrice('USD');
-            expect(result).to.deep.equal(mockData);
+            expect(result).to.have.property('bpi');
+            expect(result.bpi.USD).to.have.property('code', 'USD');
+            expect(result.bpi.USD).to.have.property('symbol', '$');
+            expect(result.bpi.USD).to.have.property('description', 'United States Dollar');
+            expect(result).to.have.property('time');
         });
 
         it('Should fetch Bitcoin price in BRL', async () => {
             const mockData = {
-                time: { updated: 'Nov 18, 2025 00:00:00 UTC' },
-                bpi: {
-                    BRL: {
-                        code: 'BRL',
-                        symbol: 'R$',
-                        rate: '250,000.00',
-                        description: 'Brazilian Real'
-                    }
-                }
+                bitcoin: {
+                    brl: 250000,
+                    last_updated_at: 1731888000,
+                },
             };
 
-            mock.onGet('https://api.coindesk.com/v1/bpi/currentprice/BRL.json')
+            mock.onGet('https://api.coingecko.com/api/v3/simple/price')
                 .reply(200, mockData);
 
             const result = await fetchBitcoinPrice('BRL');
-            expect(result).to.deep.equal(mockData);
+            expect(result).to.have.property('bpi');
+            expect(result.bpi.BRL).to.have.property('code', 'BRL');
+            expect(result.bpi.BRL).to.have.property('symbol', 'R$');
+            expect(result.bpi.BRL).to.have.property('description', 'Brazilian Real');
+            expect(result).to.have.property('time');
         });
 
         it('Should throw error for unsupported currency', async () => {
-            mock.onGet('https://api.coindesk.com/v1/bpi/currentprice/XYZ.json')
-                .reply(404);
-
             try {
                 await fetchBitcoinPrice('XYZ');
                 expect.fail('Should have thrown an error');
@@ -93,7 +88,7 @@ describe('BTC-Preco CLI Tests', () => {
         });
 
         it('Should throw error when API is unreachable', async () => {
-            mock.onGet('https://api.coindesk.com/v1/bpi/currentprice/USD.json')
+            mock.onGet('https://api.coingecko.com/api/v3/simple/price')
                 .networkError();
 
             try {
@@ -101,6 +96,50 @@ describe('BTC-Preco CLI Tests', () => {
                 expect.fail('Should have thrown an error');
             } catch (error) {
                 expect(error.message).to.include('Failed to fetch Bitcoin price');
+            }
+        });
+
+        it('Should throw error when rate limited', async () => {
+            mock.onGet('https://api.coingecko.com/api/v3/simple/price')
+                .reply(429);
+
+            try {
+                await fetchBitcoinPrice('USD');
+                expect.fail('Should have thrown an error');
+            } catch (error) {
+                expect(error.message).to.include('Rate limited');
+            }
+        });
+
+        it('Should throw error when price not returned by API', async () => {
+            const mockData = {
+                bitcoin: {
+                    last_updated_at: 1731888000,
+                },
+            };
+
+            mock.onGet('https://api.coingecko.com/api/v3/simple/price')
+                .reply(200, mockData);
+
+            try {
+                await fetchBitcoinPrice('USD');
+                expect.fail('Should have thrown an error');
+            } catch (error) {
+                expect(error.message).to.include('Currency USD not returned by API');
+            }
+        });
+
+        it('Should throw error on timeout', async () => {
+            const timeoutError = new Error('timeout');
+            timeoutError.code = 'ETIMEDOUT';
+            mock.onGet('https://api.coingecko.com/api/v3/simple/price')
+                .reply(() => Promise.reject(timeoutError));
+
+            try {
+                await fetchBitcoinPrice('USD');
+                expect.fail('Should have thrown an error');
+            } catch (error) {
+                expect(error.message).to.include('Request timeout');
             }
         });
     });

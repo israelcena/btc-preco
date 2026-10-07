@@ -2,17 +2,19 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D14.0.0-brightgreen)](https://nodejs.org/)
+[![Coverage](https://img.shields.io/badge/coverage-%3E%3D80%25-brightgreen)](https://github.com/israelcena/btc-preco)
 
 Um CLI moderno e elegante para consultar o preço do Bitcoin em tempo real em diferentes moedas.
 
 ## 🚀 Características
 
 - ✅ Consulta de preço do Bitcoin em tempo real
-- 💱 Suporte para múltiplas moedas (USD, BRL, EUR, GBP, etc.)
+- 💱 Suporte para múltiplas moedas (USD, BRL, EUR, GBP, JPY, ARS, CNY, INR, KRW, MXN)
 - 🎨 Interface colorida e bonita no terminal
 - ⚡ Rápido e eficiente
-- 🧪 100% testado
+- 🧪 100% testado (cobertura > 80%)
 - 🔒 Tratamento robusto de erros
+- 🌐 API CoinGecko (confiável, sem rate limit rigoroso)
 
 ## 📦 Instalação
 
@@ -52,6 +54,12 @@ btc-preco
 btc-preco -c BRL
 btc-preco -c EUR
 btc-preco -c GBP
+btc-preco -c JPY
+btc-preco -c ARS
+btc-preco -c CNY
+btc-preco -c INR
+btc-preco -c KRW
+btc-preco -c MXN
 ```
 
 ### Ajuda
@@ -79,9 +87,9 @@ Fetching Bitcoin price in BRL...
 ============================================================
 
   Currency: Brazilian Real
-  Rate:     250,000.00
+  Rate:     415,838.00
   Symbol:   R$
-  Updated:  Nov 18, 2025 00:00:00 UTC
+  Updated:  Wed, 07 Oct 2026 13:20:20 GMT
 
 ============================================================
 
@@ -95,9 +103,25 @@ Fetching Bitcoin price in USD...
 ============================================================
 
   Currency: United States Dollar
-  Rate:     50,000.00
+  Rate:     83,447.00
   Symbol:   $
-  Updated:  Nov 18, 2025 00:00:00 UTC
+  Updated:  Wed, 07 Oct 2026 13:11:10 GMT
+
+============================================================
+
+# Preço em Euros
+$ btc-preco -c EUR
+
+Fetching Bitcoin price in EUR...
+
+============================================================
+  💰 Bitcoin Price Information
+============================================================
+
+  Currency: Euro
+  Rate:     74,673.00
+  Symbol:   €
+  Updated:  Wed, 07 Oct 2026 13:11:50 GMT
 
 ============================================================
 ```
@@ -194,14 +218,18 @@ Exibe o preço do Bitcoin de forma formatada no console.
 
 ## 🌍 Moedas Suportadas
 
-O CLI suporta todas as moedas disponibilizadas pela API do CoinDesk, incluindo:
+O CLI suporta as seguintes moedas (via API CoinGecko):
 
 - USD - Dólar Americano
 - BRL - Real Brasileiro
 - EUR - Euro
 - GBP - Libra Esterlina
 - JPY - Iene Japonês
-- E muitas outras...
+- ARS - Peso Argentino
+- CNY - Yuan Chinês
+- INR - Rupia Indiana
+- KRW - Won Sul-Coreano
+- MXN - Peso Mexicano
 
 ## 🤝 Contribuindo
 
@@ -225,7 +253,7 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENCE.md](LICENCE.md) p
 
 ## 🙏 Agradecimentos
 
-- [CoinDesk](https://www.coindesk.com/) pela API de preços do Bitcoin
+- [CoinGecko](https://www.coingecko.com/) pela API de preços do Bitcoin
 - Comunidade Node.js pelos excelentes pacotes e ferramentas
 
 ## 📊 Status do Projeto

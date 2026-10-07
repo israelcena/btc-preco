@@ -7,7 +7,7 @@
     "prepush": "npm run coverage",
     "clear": "rimraf bin",
     "build": "npm run clear && ./node_modules/.bin/babel src --out-dir bin --presets=@babel/env",
-    "coverage": "nyc npm test",
+    "coverage": "nyc --reporter=text --reporter=html npm test",
     "test": "./node_modules/.bin/mocha tests/**/*.spec.js -R progress -r chai/register-expect.js"
   },
   "keywords": [
@@ -19,13 +19,15 @@
     "btc-preco": "bin/main.js"
   },
   "nyc": {
-    "functions": 0,
-    "lines": 0,
+    "extension": [".js"],
+    "require": ["@babel/register"],
+    "include": ["src/**/*.js"],
+    "exclude": ["tests/**/*.js"],
+    "reporter": ["text", "html"],
     "check-coverage": true,
-    "reporter": [
-      "text",
-      "html"
-    ]
+    "lines": 80,
+    "functions": 80,
+    "branches": 80
   },
   "type": "module",
   "repository": {
@@ -35,11 +37,12 @@
   "author": "IsraelCena",
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "^7.23.9",
-    "@babel/core": "^7.23.9",
-    "@babel/preset-env": "^7.23.9",
-    "@babel/register": "^7.23.7",
+    "@babel/cli": "^8.0.6",
+    "@babel/core": "^8.0.7",
+    "@babel/preset-env": "^8.0.7",
+    "@babel/register": "^8.0.6",
     "axios-mock-adapter": "^2.1.0",
+    "c8": "^12.0.0",
     "chai": "^5.1.0",
     "mocha": "^10.3.0",
     "nock": "^14.0.10",
