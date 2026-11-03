@@ -79,23 +79,25 @@ export function montarResultadosHTML(resultados = [], selecionada = '') {
         const tema = isSelected ? 'text-warning' : 'text-muted';
         const status = coin.rate ? 'online' : 's/ preço';
         const statusClasse = coin.rate ? 'bg-success' : 'bg-secondary';
+        const thumb = coin.thumb
+            ? `<img src="${escapeHtml(coin.thumb)}" alt="" width="18" height="18" class="rounded-circle resultado-thumb" loading="lazy" referrerpolicy="no-referrer">`
+            : '';
 
         return `
             <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                 <div class="card h-100 moeda-card resultado-card ${isSelected ? 'selecionada' : ''}" data-code="${escapeHtml(coin.code)}" data-id="${escapeHtml(coin.id)}" role="button" tabindex="0" aria-pressed="${isSelected}">
                     <div class="card-body d-flex flex-column">
                         <div class="d-flex justify-content-between align-items-start mb-2">
-                            <span class="coin-code ${tema} small fw-bold">${escapeHtml(coin.code)}</span>
+                            <span class="coin-code ${tema} small fw-bold d-inline-flex align-items-center gap-1">
+                                ${thumb} ${escapeHtml(coin.code)}
+                            </span>
                             <span class="badge ${statusClasse} rounded-pill">${status}</span>
                         </div>
-                        <div class="d-flex align-items-center gap-2 mb-2 resultado-identidade">
-                            ${coin.thumb ? `<img src="${escapeHtml(coin.thumb)}" alt="" width="24" height="24" class="rounded-circle resultado-thumb" loading="lazy" referrerpolicy="no-referrer">` : ''}
-                            <span class="moeda-nome resultado-nome">${escapeHtml(coin.name)}</span>
-                        </div>
-                        <div class="d-flex align-items-baseline flex-grow-1">
+                        <div class="d-flex align-items-baseline mb-3 flex-grow-1">
                             <span class="moeda-simbolo me-1">R$</span>
                             <span class="moeda-valor">${coin.rate ? escapeHtml(coin.rate) : '--,--'}</span>
                         </div>
+                        <span class="moeda-nome">${escapeHtml(coin.name)}</span>
                     </div>
                 </div>
             </div>

@@ -131,6 +131,8 @@ describe('Frontend (jsdom) - Busca e interação', () => {
         expect(cardPepe, 'card de resultado do PEPE').to.exist;
         expect(cardPepe.textContent).to.contain('0,00002654');
         expect(document.getElementById('busca-status').textContent).to.contain('resultado');
+        // Resultados substituem os cards padrão
+        expect(document.getElementById('grid-moedas').classList.contains('d-none')).to.equal(true);
     });
 
     it('deve atualizar o preço em destaque ao clicar em um resultado', async () => {
@@ -143,6 +145,17 @@ describe('Frontend (jsdom) - Busca e interação', () => {
         expect(document.getElementById('preco-brl').textContent).to.contain('R$ 0,00002654');
         expect(document.getElementById('nome-principal').textContent).to.equal('Pepe');
         expect(cardPepe.classList.contains('selecionada')).to.equal(true);
+    });
+
+    it('deve limpar a busca e voltar aos cards padrão', async () => {
+        const input = document.getElementById('input-busca');
+        input.value = '';
+        input.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
+
+        await esperar(30);
+
+        expect(document.getElementById('resultados-busca').innerHTML).to.equal('');
+        expect(document.getElementById('grid-moedas').classList.contains('d-none')).to.equal(false);
     });
 
     it('deve voltar ao BTC ao clicar em um card fixo', async () => {

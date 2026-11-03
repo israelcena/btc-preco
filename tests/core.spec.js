@@ -112,6 +112,15 @@ describe('core.js - Lógica do frontend', () => {
             expect(html).to.include('--,--');
         });
 
+        it('deve usar a mesma estrutura visual dos cards padrão', () => {
+            expect(html).to.include('moeda-simbolo');
+            expect(html).to.include('moeda-valor');
+            expect(html).to.include('moeda-nome');
+            expect(html).to.include('resultado-thumb');
+            expect(html).to.not.include('resultado-identidade');
+            expect(html).to.not.include('resultado-nome');
+        });
+
         it('deve escapar dados vindos da API', () => {
             const perigoso = montarResultadosHTML([
                 { id: 'x', code: '<b>', name: '<img onerror=x>', thumb: '', rate: null },

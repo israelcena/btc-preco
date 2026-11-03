@@ -20,8 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `GET /api/health` — health check
 - **Interatividade**: clique (ou Enter/Espaço) em um card atualiza o preço em destaque no topo
 - **Atualização automática** dos preços a cada 60 segundos e botão de refresh manual
-- **Destaque ao clicar**: o card selecionado cresce (`scale(1.06)`), ganha mais espaço interno e sombra reforçada; os resultados da busca usam o mesmo visual e efeito
-- **Testes automatizados**: 54 novos testes (66 no total), incluindo testes de navegador com `jsdom` (busca, clique e destaque)
+- **Destaque ao clicar**: o card selecionado cresce (`scale(1.06)`) com sombra reforçada e mais espaço ao redor (grade com gutters maiores); no mobile a escala é reduzida
+- **Busca integrada**: os resultados substituem os cards padrão enquanto a busca está ativa e usam exatamente o mesmo layout/efeito, voltando ao normal ao limpar o campo
+- **Testes automatizados**: 59 novos testes (71 no total), incluindo testes de navegador com `jsdom` (busca, clique e destaque)
   - `tests/core.spec.js` — lógica pura (formatação, seleção, geração de cards)
   - `tests/server.spec.js` — endpoints com `app.inject()` e mock da CoinGecko via `nock`
   - `tests/frontend.spec.js` — contrato HTML ↔ JS
@@ -39,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **README** atualizado com a nova versão mínima do Node
 
 ### Fixed
+- **Rate limit da CoinGecko (429)**: cache em memória de 55s com fallback para o último preço válido — a página não mostra mais tudo como "indisponível" em picos de limite
 - **Campo de busca**: layout refeito em estilo pill, corrigindo sobreposição do input com o botão
 - **Atualização de preços**: merge corrigido, os valores agora atualizam sem perder os extras da busca
 - **Segurança/performance**: frontend movido para `public/` e servidor restrito a essa pasta — `node_modules` não é mais enumerado nem exposto (a inicialização da API caiu de >2s para <1s)

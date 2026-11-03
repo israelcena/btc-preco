@@ -154,6 +154,35 @@ export async function fetchBitcoinVariation() {
  */
 export function buildApp(options = {}) {
     const app = fastify({ logger: options.logger ?? false });
+    const cacheMs = options.cacheMs ?? 55_000;
+
+    // Cache em memória com fallback para o último valor válido.
+    // Evita 429 da CoinGecko e mantém os preços na tela quando a API falha.
+    const cache = new Map();
+
+    async function comCache(chave, buscar) {
+        if (cacheMs <= 0) {
+            return { valor: await buscar(), stale: false };
+        }
+
+        const agora = Date.now();
+        const entrada = cache.get(chave);
+
+        if (entrada && agora < entrada.expiraEm) {
+            return { valor: entrada.valor, stale: false };
+        }
+
+        try {
+            const valor = await buscar();
+            cache.set(chave, { valor, expiraEm: agora + cacheMs });
+            return { valor, stale: false };
+        } catch (erro) {
+            if (entrada) {
+                return { valor: entrada.valor, stale: true, erro };
+            }
+            throw erro;
+        }
+    }
 
     // Serve apenas o frontend (public/), sem expor node_modules ou o código do servidor
     app.register(fastifyStatic, {
@@ -164,9 +193,13 @@ export function buildApp(options = {}) {
     // API: lista de preços de todas as criptomoedas em BRL
     app.get('/api/precos', async (request, reply) => {
         try {
-            const coinIds = Object.values(COINS).map(c => c.coingeckoId);
-            const data = await fetchCryptoPrices(coinIds);
-            reply.send({ sucesso: true, ...data });
+            const { valor, stale } = await comCache('precos', async () => {
+                const coinIds = Object.values(COINS).map(c => c.coingeckoId);
+                const data = await fetchCryptoPrices(coinIds);
+                return { sucesso: true, ...data };
+            });
+
+            reply.send(stale ? { ...valor, stale: true } : valor);
         } catch (error) {
             app.log.error(error);
             reply.status(502).send({ sucesso: false, erro: error.message });
@@ -184,7 +217,7 @@ export function buildApp(options = {}) {
                 return reply.status(404).send({ sucesso: false, erro: `Criptomoeda ${moeda} não suportada` });
             }
 
-            const data = await fetchCryptoPrices([info.coingeckoId]);
+            const { valor: data } = await comCache(`preco:${codigo}`, () => fetchCryptoPrices([info.coingeckoId]));
             const preco = data.precos[codigo];
 
             if (!preco) {
@@ -207,8 +240,12 @@ export function buildApp(options = {}) {
         }
 
         try {
-            const resultados = await searchCoins(query);
-            reply.send({ sucesso: true, query, resultados });
+            const { valor, stale } = await comCache(`busca:${query.toLowerCase()}`, async () => {
+                const resultados = await searchCoins(query);
+                return { sucesso: true, query, resultados };
+            });
+
+            reply.send(stale ? { ...valor, stale: true } : valor);
         } catch (error) {
             app.log.error(error);
             reply.status(502).send({ sucesso: false, erro: error.message });
@@ -218,8 +255,12 @@ export function buildApp(options = {}) {
     // API: variação 24h do Bitcoin
     app.get('/api/variacao', async (request, reply) => {
         try {
-            const variacao = await fetchBitcoinVariation();
-            reply.send({ sucesso: true, variacao });
+            const { valor, stale } = await comCache('variacao', async () => {
+                const variacao = await fetchBitcoinVariation();
+                return { sucesso: true, variacao };
+            });
+
+            reply.send(stale ? { ...valor, stale: true } : valor);
         } catch (error) {
             app.log.error(error);
             reply.status(502).send({ sucesso: false, erro: error.message });

@@ -74,14 +74,21 @@ describe('Integridade do frontend (contrato HTML <-> JS)', () => {
         expect(html).to.include('id="resultados-busca"');
     });
 
-    it('CSS deve destacar o card selecionado com escala e mais espaço interno', () => {
+    it('CSS deve destacar o card selecionado com escala e espaço ao redor', () => {
         const css = fs.readFileSync(path.join(root, 'public/css/style.css'), 'utf8');
         expect(css).to.include('.moeda-card.selecionada');
         expect(css).to.include('transform: scale(1.06)');
-        expect(css).to.include('.moeda-card.selecionada .card-body');
-        expect(css).to.include('padding: 1.45rem 1.35rem');
         // No mobile a escala reduz para não vazar da tela
         expect(css).to.include('transform: scale(1.02)');
+    });
+
+    it('grades de cards devem usar espaçamento maior (g-4) e respiro após a busca', () => {
+        expect(html).to.include('class="row g-4 mt-4" id="grid-moedas"');
+        expect(html).to.include('class="row g-4 mt-4" id="resultados-busca"');
+
+        const css = fs.readFileSync(path.join(root, 'public/css/style.css'), 'utf8');
+        // Resultados acompanham o layout ultrawide de 5 colunas
+        expect(css).to.include('#resultados-busca > [class*="col-"]');
     });
 
     it('app.js não deve rolar a página ao selecionar uma moeda', () => {

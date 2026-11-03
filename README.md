@@ -14,7 +14,7 @@ Um CLI moderno e elegante para consultar o preço do Bitcoin em tempo real em di
 - ⚡ Rápido e eficiente
 - 🧪 100% testado (cobertura > 80%)
 - 🔒 Tratamento robusto de erros
-- 🌐 API CoinGecko (confiável, sem rate limit rigoroso)
+- 🌐 API CoinGecko com cache local de 55s para evitar rate limit
 
 ## 📦 Instalação
 

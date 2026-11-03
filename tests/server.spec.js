@@ -6,7 +6,7 @@ describe('API Fastify - Endpoints', () => {
     let app;
 
     before(async () => {
-        app = buildApp();
+        app = buildApp({ cacheMs: 0 });
         await app.ready();
     });
 
@@ -242,6 +242,57 @@ describe('API Fastify - Endpoints', () => {
 
             const res = await app.inject({ method: 'GET', url: '/api/variacao' });
             expect(res.statusCode).to.equal(502);
+        });
+    });
+
+    describe('Cache de preços', () => {
+        it('deve reutilizar o cache dentro do TTL sem chamar a API', async () => {
+            const appCache = buildApp({ cacheMs: 60000 });
+            await appCache.ready();
+
+            nock('https://api.coingecko.com')
+                .get('/api/v3/simple/price')
+                .query(true)
+                .reply(200, { bitcoin: { brl: 100, last_updated_at: 1731888000 } });
+
+            const primeira = await appCache.inject({ method: 'GET', url: '/api/precos' });
+            expect(primeira.statusCode).to.equal(200);
+            expect(primeira.json().precos.BTC.value).to.equal(100);
+
+            // Sem novo interceptor: se sair para a rede, falha; deve vir do cache
+            const segunda = await appCache.inject({ method: 'GET', url: '/api/precos' });
+            expect(segunda.statusCode).to.equal(200);
+            expect(segunda.json().precos.BTC.value).to.equal(100);
+            expect(segunda.json().stale).to.be.undefined;
+
+            await appCache.close();
+        });
+
+        it('deve servir o último preço válido quando a API falha (stale)', async () => {
+            const appCache = buildApp({ cacheMs: 10 });
+            await appCache.ready();
+
+            nock('https://api.coingecko.com')
+                .get('/api/v3/simple/price')
+                .query(true)
+                .reply(200, { bitcoin: { brl: 200, last_updated_at: 1731888000 } });
+
+            const primeira = await appCache.inject({ method: 'GET', url: '/api/precos' });
+            expect(primeira.json().precos.BTC.value).to.equal(200);
+
+            await new Promise(resolve => setTimeout(resolve, 25));
+
+            nock('https://api.coingecko.com')
+                .get('/api/v3/simple/price')
+                .query(true)
+                .replyWithError('429 rate limit');
+
+            const segunda = await appCache.inject({ method: 'GET', url: '/api/precos' });
+            expect(segunda.statusCode).to.equal(200);
+            expect(segunda.json().stale).to.equal(true);
+            expect(segunda.json().precos.BTC.value).to.equal(200);
+
+            await appCache.close();
         });
     });
 

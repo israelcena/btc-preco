@@ -275,20 +275,6 @@ main,
     background: var(--bg);
 }
 
-.resultado-identidade {
-    min-width: 0;
-}
-
-.resultado-nome {
-    text-transform: none;
-    letter-spacing: 0;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: var(--ink-soft);
-}
-
 #resultados-busca:empty {
     display: none;
 }
@@ -309,7 +295,6 @@ main,
 
 .moeda-card .card-body {
     padding: 1.15rem 1.2rem;
-    transition: padding 0.25s ease;
 }
 
 .moeda-card:hover {
@@ -330,10 +315,6 @@ main,
     border-color: var(--brand);
     background: var(--brand-soft);
     box-shadow: 0 0 0 3px rgba(247, 147, 26, 0.28), 0 18px 40px rgba(31, 41, 55, 0.18);
-}
-
-.moeda-card.selecionada .card-body {
-    padding: 1.45rem 1.35rem;
 }
 
 /* Sobe mais ao passar o mouse no card já selecionado */
@@ -578,10 +559,6 @@ html {
         transform: scale(1.02);
     }
 
-    .moeda-card.selecionada .card-body {
-        padding: 1.1rem 1.05rem;
-    }
-
     .moeda-simbolo {
         font-size: 1.35rem;
     }
@@ -705,7 +682,8 @@ html {
     }
 
     /* 5 cards por linha em telas muito largas */
-    #grid-moedas > [class*="col-"] {
+    #grid-moedas > [class*="col-"],
+    #resultados-busca > [class*="col-"] {
         flex: 0 0 20%;
         max-width: 20%;
     }

@@ -61,6 +61,14 @@ const app = {
             this.debounceTimer = setTimeout(() => this.buscar(termo), 500);
         });
 
+        // Botão "x" nativo do input type="search"
+        this.elementos.inputBusca.addEventListener('search', () => {
+            if (!this.elementos.inputBusca.value.trim()) {
+                clearTimeout(this.debounceTimer);
+                this.limparResultados();
+            }
+        });
+
         // Clique e teclado nos cards de resultado
         this.elementos.resultadosBusca.addEventListener('click', (event) => {
             const card = event.target.closest('.moeda-card');
@@ -180,15 +188,19 @@ const app = {
         }
     },
 
-    /** Renderiza os resultados da busca */
+    /** Renderiza os resultados da busca, substituindo os cards padrão */
     renderResultados() {
+        const temResultados = this.resultados.length > 0;
         this.elementos.resultadosBusca.innerHTML = montarResultadosHTML(this.resultados, this.moedaSelecionada);
+        // Resultados substituem a grade padrão; sem resultados, ela volta a aparecer
+        this.elementos.gridMoedas.classList.toggle('d-none', temResultados);
     },
 
     /** Limpa busca e resultados */
     limparResultados() {
         this.resultados = [];
         this.elementos.resultadosBusca.innerHTML = '';
+        this.elementos.gridMoedas.classList.remove('d-none');
         this.definirStatus('', '');
     },
 
