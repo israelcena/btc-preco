@@ -91,6 +91,15 @@ describe('Integridade do frontend (contrato HTML <-> JS)', () => {
         expect(css).to.include('#resultados-busca > [class*="col-"]');
     });
 
+    it('CSS deve conter animações de entrada no estilo Animista', () => {
+        const css = fs.readFileSync(path.join(root, 'public/css/style.css'), 'utf8');
+        expect(css).to.include('@keyframes cards-entrada');
+        expect(css).to.include('.entrada-animada > [class*="col-"]');
+        expect(css).to.include('@keyframes destaque-pulso');
+        expect(css).to.include('@keyframes preco-pop');
+        expect(css).to.include('animation: none !important');
+    });
+
     it('app.js não deve rolar a página ao selecionar uma moeda', () => {
         expect(appJs).to.not.include('scrollIntoView');
     });

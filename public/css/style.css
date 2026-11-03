@@ -324,6 +324,96 @@ main,
     }
 }
 
+/* ---------- Animações (inspiradas no Animista) ---------- */
+/* Entrada dos cards: fade-in-bottom com leve blur e escala */
+@keyframes cards-entrada {
+    0% {
+        opacity: 0;
+        transform: translateY(28px) scale(0.97);
+        filter: blur(3px);
+    }
+    60% {
+        filter: blur(0);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+.entrada-animada > [class*="col-"] {
+    animation: cards-entrada 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+/* Cascata: cada card entra um pouco depois do anterior */
+.entrada-animada > [class*="col-"]:nth-child(1) { animation-delay: 0.02s; }
+.entrada-animada > [class*="col-"]:nth-child(2) { animation-delay: 0.05s; }
+.entrada-animada > [class*="col-"]:nth-child(3) { animation-delay: 0.08s; }
+.entrada-animada > [class*="col-"]:nth-child(4) { animation-delay: 0.11s; }
+.entrada-animada > [class*="col-"]:nth-child(5) { animation-delay: 0.14s; }
+.entrada-animada > [class*="col-"]:nth-child(6) { animation-delay: 0.17s; }
+.entrada-animada > [class*="col-"]:nth-child(7) { animation-delay: 0.20s; }
+.entrada-animada > [class*="col-"]:nth-child(8) { animation-delay: 0.23s; }
+.entrada-animada > [class*="col-"]:nth-child(9) { animation-delay: 0.26s; }
+.entrada-animada > [class*="col-"]:nth-child(10) { animation-delay: 0.29s; }
+.entrada-animada > [class*="col-"]:nth-child(11) { animation-delay: 0.32s; }
+.entrada-animada > [class*="col-"]:nth-child(12) { animation-delay: 0.35s; }
+
+/* Pulso de destaque ao selecionar um card */
+@keyframes destaque-pulso {
+    0% {
+        box-shadow: 0 0 0 0 rgba(247, 147, 26, 0.5), 0 18px 40px rgba(31, 41, 55, 0.18);
+    }
+    70% {
+        box-shadow: 0 0 0 12px rgba(247, 147, 26, 0), 0 18px 40px rgba(31, 41, 55, 0.18);
+    }
+    100% {
+        box-shadow: 0 0 0 3px rgba(247, 147, 26, 0.28), 0 18px 40px rgba(31, 41, 55, 0.18);
+    }
+}
+
+.moeda-card.selecionada {
+    animation: destaque-pulso 0.6s ease-out;
+}
+
+/* Preço em destaque: pop ao trocar de moeda */
+@keyframes preco-pop {
+    0% {
+        opacity: 0.35;
+        transform: scale(0.94) translateY(6px);
+    }
+    60% {
+        opacity: 1;
+        transform: scale(1.03) translateY(0);
+    }
+    100% {
+        transform: scale(1) translateY(0);
+    }
+}
+
+#preco-brl.preco-pop {
+    animation: preco-pop 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Mensagem de status da busca */
+@keyframes status-entrada {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+        filter: blur(2px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+.search-status.status-animado {
+    animation: status-entrada 0.3s ease-out;
+}
+
 /* Código/moeda no topo do card */
 .moeda-card .coin-code {
     color: var(--muted) !important;
@@ -750,5 +840,12 @@ html {
     .moeda-card,
     .btn-brand {
         transition: none;
+    }
+
+    .entrada-animada > [class*="col-"],
+    .moeda-card.selecionada,
+    #preco-brl.preco-pop,
+    .search-status.status-animado {
+        animation: none !important;
     }
 }

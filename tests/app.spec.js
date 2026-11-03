@@ -133,6 +133,7 @@ describe('Frontend (jsdom) - Busca e interação', () => {
         expect(document.getElementById('busca-status').textContent).to.contain('resultado');
         // Resultados substituem os cards padrão
         expect(document.getElementById('grid-moedas').classList.contains('d-none')).to.equal(true);
+        expect(document.getElementById('resultados-busca').classList.contains('entrada-animada')).to.equal(true);
     });
 
     it('deve atualizar o preço em destaque ao clicar em um resultado', async () => {
@@ -156,6 +157,7 @@ describe('Frontend (jsdom) - Busca e interação', () => {
 
         expect(document.getElementById('resultados-busca').innerHTML).to.equal('');
         expect(document.getElementById('grid-moedas').classList.contains('d-none')).to.equal(false);
+        expect(document.getElementById('grid-moedas').classList.contains('entrada-animada')).to.equal(true);
     });
 
     it('deve voltar ao BTC ao clicar em um card fixo', async () => {

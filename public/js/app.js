@@ -40,6 +40,7 @@ const app = {
     /** Inicializa a aplicação */
     init() {
         this.renderCardsMoedas();
+        this.animarEntrada(this.elementos.gridMoedas);
 
         this.elementos.btnAtualizar.addEventListener('click', () => this.atualizar());
 
@@ -123,6 +124,15 @@ const app = {
         });
     },
 
+    /** Reinicia a animação de entrada dos cards de um container */
+    animarEntrada(container) {
+        if (!container) return;
+        container.classList.remove('entrada-animada');
+        // Força reflow para a animação poder recomeçar
+        void container.offsetWidth;
+        container.classList.add('entrada-animada');
+    },
+
     /** Busca criptomoedas pelo termo informado */
     async buscar(termoBruto) {
         const termo = String(termoBruto ?? '').trim();
@@ -191,16 +201,29 @@ const app = {
     /** Renderiza os resultados da busca, substituindo os cards padrão */
     renderResultados() {
         const temResultados = this.resultados.length > 0;
+        const gridEstavaOculta = this.elementos.gridMoedas.classList.contains('d-none');
+
         this.elementos.resultadosBusca.innerHTML = montarResultadosHTML(this.resultados, this.moedaSelecionada);
+
         // Resultados substituem a grade padrão; sem resultados, ela volta a aparecer
         this.elementos.gridMoedas.classList.toggle('d-none', temResultados);
+
+        // Animista: entrada em cascata dos cards que acabaram de aparecer
+        if (temResultados) {
+            this.animarEntrada(this.elementos.resultadosBusca);
+        } else if (gridEstavaOculta) {
+            this.animarEntrada(this.elementos.gridMoedas);
+        }
     },
 
     /** Limpa busca e resultados */
     limparResultados() {
+        const gridEstavaOculta = this.elementos.gridMoedas.classList.contains('d-none');
+
         this.resultados = [];
         this.elementos.resultadosBusca.innerHTML = '';
         this.elementos.gridMoedas.classList.remove('d-none');
+        if (gridEstavaOculta) this.animarEntrada(this.elementos.gridMoedas);
         this.definirStatus('', '');
     },
 
@@ -209,6 +232,12 @@ const app = {
         const el = this.elementos.buscaStatus;
         el.textContent = mensagem;
         el.className = `search-status ${classe || ''}`.trim();
+
+        if (mensagem) {
+            el.classList.remove('status-animado');
+            void el.offsetWidth;
+            el.classList.add('status-animado');
+        }
     },
 
     /** Seleciona uma criptomoeda e atualiza o preço principal sem re-renderizar os cards */
@@ -230,11 +259,11 @@ const app = {
             }
         });
 
-        this.atualizarPrecoPrincipal();
+        this.atualizarPrecoPrincipal(true);
     },
 
     /** Atualiza o preço principal com os dados já carregados em memória */
-    atualizarPrecoPrincipal() {
+    atualizarPrecoPrincipal(animar = false) {
         const dados = montarPrecoPrincipal(this.moedaSelecionada, this.precos, this.todasCoins());
         this.elementos.precoPrincipal.textContent = dados.preco;
         this.elementos.simboloPrincipal.textContent = dados.simbolo;
@@ -242,6 +271,13 @@ const app = {
 
         if (this.ultimaAtualizacao) {
             this.elementos.atualizadoEm.textContent = formatarHoraISO(this.ultimaAtualizacao);
+        }
+
+        if (animar) {
+            const el = this.elementos.precoPrincipal;
+            el.classList.remove('preco-pop');
+            void el.offsetWidth;
+            el.classList.add('preco-pop');
         }
     },
 
