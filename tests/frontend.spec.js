@@ -20,6 +20,11 @@ describe('Integridade do frontend (contrato HTML <-> JS)', () => {
             'variacao-24h',
             'grid-moedas',
             'btn-atualizar',
+            'form-busca',
+            'input-busca',
+            'btn-busca',
+            'busca-status',
+            'resultados-busca',
         ];
 
         ids.forEach(id => {
@@ -52,6 +57,20 @@ describe('Integridade do frontend (contrato HTML <-> JS)', () => {
         expect(css, 'breakpoint desktop grande').to.include('@media (min-width: 1400px)');
         expect(css, 'breakpoint ultrawide').to.include('@media (min-width: 1800px)');
         expect(css, 'suporte a reduced motion').to.include('@media (prefers-reduced-motion: reduce)');
+    });
+
+    it('CSS deve estilizar o campo de busca gigante', () => {
+        const css = fs.readFileSync(path.join(root, 'css/style.css'), 'utf8');
+        expect(css).to.include('.search-input');
+        expect(css).to.include('.search-panel');
+        expect(css).to.include('height: 64px');
+    });
+
+    it('index.html deve conter o formulário de busca acessível', () => {
+        expect(html).to.include('id="form-busca"');
+        expect(html).to.include('role="search"');
+        expect(html).to.include('id="input-busca"');
+        expect(html).to.include('id="resultados-busca"');
     });
 
     it('app.js não deve usar onclick inline (evita dependência de global)', () => {

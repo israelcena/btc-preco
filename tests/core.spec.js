@@ -6,6 +6,8 @@ import {
     encontrarCoin,
     montarPrecoPrincipal,
     montarCardsHTML,
+    montarResultadosHTML,
+    escapeHtml,
 } from '../js/core.js';
 
 describe('core.js - Lógica do frontend', () => {
@@ -69,6 +71,63 @@ describe('core.js - Lógica do frontend', () => {
             const dados = montarPrecoPrincipal('XYZ', {});
             expect(dados.preco).to.equal('R$ --,--');
             expect(dados.nome).to.equal('XYZ');
+        });
+    });
+
+    describe('escapeHtml', () => {
+        it('deve escapar caracteres perigosos', () => {
+            expect(escapeHtml('<script>alert("x")</script>')).to.equal(
+                '&lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt;'
+            );
+        });
+
+        it('deve tratar null/undefined', () => {
+            expect(escapeHtml(null)).to.equal('');
+            expect(escapeHtml(undefined)).to.equal('');
+        });
+    });
+
+    describe('montarResultadosHTML', () => {
+        const resultados = [
+            { id: 'pepe', code: 'PEPE', name: 'Pepe', thumb: 'https://x/pepe.png', rate: '0,00005' },
+            { id: 'shiba-inu', code: 'SHIB', name: 'Shiba Inu', thumb: '', rate: null },
+        ];
+        const html = montarResultadosHTML(resultados, 'PEPE');
+
+        it('deve renderizar um card por resultado', () => {
+            expect(html).to.include('data-code="PEPE"');
+            expect(html).to.include('data-code="SHIB"');
+            expect(html).to.include('data-id="pepe"');
+        });
+
+        it('deve marcar o resultado selecionado', () => {
+            expect(html).to.include('data-code="PEPE" data-id="pepe" role="button" tabindex="0" aria-pressed="true"');
+            expect(html).to.include('data-code="SHIB" data-id="shiba-inu" role="button" tabindex="0" aria-pressed="false"');
+        });
+
+        it('deve exibir preço e status corretos', () => {
+            expect(html).to.include('0,00005');
+            expect(html).to.include('online');
+            expect(html).to.include('s/ preço');
+            expect(html).to.include('--,--');
+        });
+
+        it('deve escapar dados vindos da API', () => {
+            const perigoso = montarResultadosHTML([
+                { id: 'x', code: '<b>', name: '<img onerror=x>', thumb: '', rate: null },
+            ], '');
+            expect(perigoso).to.not.include('<img onerror=x>');
+            expect(perigoso).to.include('&lt;img onerror=x&gt;');
+        });
+    });
+
+    describe('montarPrecoPrincipal com lista dinâmica', () => {
+        it('deve aceitar coins extras da busca', () => {
+            const lista = [...COINS, { code: 'PEPE', symbol: '🐸', name: 'Pepe' }];
+            const dados = montarPrecoPrincipal('PEPE', { PEPE: { rate: '0,00005' } }, lista);
+            expect(dados.preco).to.equal('R$ 0,00005');
+            expect(dados.nome).to.equal('Pepe');
+            expect(dados.simbolo).to.equal('🐸');
         });
     });
 

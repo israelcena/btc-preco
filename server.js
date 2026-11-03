@@ -14,6 +14,7 @@ const __dirname = path.dirname(__filename);
 
 const COINGECKO_API = 'https://api.coingecko.com/api/v3/simple/price';
 const COINGECKO_COIN_API = 'https://api.coingecko.com/api/v3/coins/bitcoin';
+const COINGECKO_SEARCH_API = 'https://api.coingecko.com/api/v3/search';
 
 // Criptomoedas suportadas (preço em BRL)
 export const COINS = {
@@ -28,6 +29,18 @@ export const COINS = {
     LINK: { symbol: '⌘', name: 'Chainlink', coingeckoId: 'chainlink' },
     MATIC: { symbol: '▲', name: 'Polygon', coingeckoId: 'matic-network' },
 };
+
+/**
+ * Formata valores em BRL com precisão adaptativa:
+ * valores >= 1 usam 2 casas; valores pequenos usam 4 dígitos significativos.
+ * Ex.: 425810 -> "425.810,00" | 0.00005 -> "0,00005"
+ */
+export function formatarPrecoBRL(valor) {
+    if (valor >= 1) {
+        return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    return valor.toLocaleString('pt-BR', { maximumSignificantDigits: 4 });
+}
 
 /**
  * Busca preços de criptomoedas em BRL na CoinGecko
@@ -56,7 +69,7 @@ export async function fetchCryptoPrices(coinIds = ['bitcoin']) {
                 code: codigo,
                 symbol: info.symbol,
                 name: info.name,
-                rate: coinData.brl.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+                rate: formatarPrecoBRL(coinData.brl),
                 value: coinData.brl,
                 updated_at: updatedAt,
             };
@@ -64,6 +77,59 @@ export async function fetchCryptoPrices(coinIds = ['bitcoin']) {
     });
 
     return { precos, updated_at: updatedAt };
+}
+
+/**
+ * Busca criptomoedas por nome/símbolo e retorna os preços em BRL.
+ * Usa /search para descobrir IDs e /simple/price para os preços.
+ * @param {string} query - termo de busca
+ * @param {number} limit - máximo de resultados
+ */
+export async function searchCoins(query, limit = 12) {
+    const searchResponse = await axios.get(COINGECKO_SEARCH_API, {
+        params: { query },
+        timeout: 10000,
+    });
+
+    const coins = (searchResponse.data.coins || []).slice(0, limit);
+    if (coins.length === 0) return [];
+
+    const ids = coins.map(c => c.id).join(',');
+    const priceResponse = await axios.get(COINGECKO_API, {
+        params: {
+            ids,
+            vs_currencies: 'brl',
+            include_last_updated_at: 'true',
+        },
+        timeout: 10000,
+    });
+
+    const prices = priceResponse.data || {};
+    const firstCoin = Object.values(prices)[0];
+    const updatedAt = new Date((firstCoin?.last_updated_at || Math.floor(Date.now() / 1000)) * 1000).toISOString();
+
+    // Evita símbolos duplicados (diferentes coins podem compartilhar o mesmo ticker)
+    const vistos = new Set();
+
+    return coins
+        .map(coin => {
+            const preco = prices[coin.id];
+            return {
+                id: coin.id,
+                code: (coin.symbol || '').toUpperCase(),
+                name: coin.name,
+                thumb: coin.thumb,
+                market_cap_rank: coin.market_cap_rank ?? null,
+                rate: preco?.brl !== undefined ? formatarPrecoBRL(preco.brl) : null,
+                value: preco?.brl ?? null,
+                updated_at: updatedAt,
+            };
+        })
+        .filter(coin => {
+            if (!coin.code || vistos.has(coin.code)) return false;
+            vistos.add(coin.code);
+            return true;
+        });
 }
 
 /** Busca variação de 24h do Bitcoin */
@@ -126,6 +192,23 @@ export function buildApp(options = {}) {
             }
 
             reply.send({ sucesso: true, ...preco, updated_at: data.updated_at });
+        } catch (error) {
+            app.log.error(error);
+            reply.status(502).send({ sucesso: false, erro: error.message });
+        }
+    });
+
+    // API: busca de criptomoedas por nome/símbolo (com preços em BRL)
+    app.get('/api/busca', async (request, reply) => {
+        const query = String(request.query.q || '').trim();
+
+        if (query.length < 2) {
+            return reply.status(400).send({ sucesso: false, erro: 'Informe ao menos 2 caracteres para buscar.' });
+        }
+
+        try {
+            const resultados = await searchCoins(query);
+            reply.send({ sucesso: true, query, resultados });
         } catch (error) {
             app.log.error(error);
             reply.status(502).send({ sucesso: false, erro: error.message });

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import nock from 'nock';
-import { buildApp } from '../server.js';
+import { buildApp, formatarPrecoBRL } from '../server.js';
 
 describe('API Fastify - Endpoints', () => {
     let app;
@@ -114,6 +114,111 @@ describe('API Fastify - Endpoints', () => {
 
             const res = await app.inject({ method: 'GET', url: '/api/preco/ETH' });
             expect(res.statusCode).to.equal(404);
+        });
+    });
+
+    describe('GET /api/busca', () => {
+        it('deve retornar 400 para termo com menos de 2 caracteres', async () => {
+            const res = await app.inject({ method: 'GET', url: '/api/busca?q=a' });
+            expect(res.statusCode).to.equal(400);
+            expect(res.json().erro).to.include('ao menos 2 caracteres');
+        });
+
+        it('deve retornar 400 quando o termo está vazio', async () => {
+            const res = await app.inject({ method: 'GET', url: '/api/busca' });
+            expect(res.statusCode).to.equal(400);
+        });
+
+        it('deve buscar coins e retornar preços em BRL', async () => {
+            nock('https://api.coingecko.com')
+                .get('/api/v3/search')
+                .query(true)
+                .reply(200, {
+                    coins: [
+                        { id: 'pepe', symbol: 'pepe', name: 'Pepe', thumb: 'https://x/pepe.png', market_cap_rank: 50 },
+                        { id: 'shiba-inu', symbol: 'shib', name: 'Shiba Inu', thumb: 'https://x/shib.png', market_cap_rank: 20 },
+                    ],
+                });
+
+            nock('https://api.coingecko.com')
+                .get('/api/v3/simple/price')
+                .query(true)
+                .reply(200, {
+                    pepe: { brl: 0.00005, last_updated_at: 1731888000 },
+                    'shiba-inu': { brl: 0.0001, last_updated_at: 1731888000 },
+                });
+
+            const res = await app.inject({ method: 'GET', url: '/api/busca?q=pepe' });
+            expect(res.statusCode).to.equal(200);
+
+            const body = res.json();
+            expect(body.sucesso).to.equal(true);
+            expect(body.resultados).to.have.length(2);
+
+            const pepe = body.resultados.find(r => r.code === 'PEPE');
+            expect(pepe).to.exist;
+            expect(pepe.name).to.equal('Pepe');
+            expect(pepe.rate).to.equal('0,00005');
+            expect(pepe.thumb).to.equal('https://x/pepe.png');
+
+            const shib = body.resultados.find(r => r.code === 'SHIB');
+            expect(shib.rate).to.equal('0,0001');
+        });
+
+        it('deve retornar lista vazia quando nada é encontrado', async () => {
+            nock('https://api.coingecko.com')
+                .get('/api/v3/search')
+                .query(true)
+                .reply(200, { coins: [] });
+
+            const res = await app.inject({ method: 'GET', url: '/api/busca?q=zzzzzz' });
+            expect(res.statusCode).to.equal(200);
+            expect(res.json().resultados).to.deep.equal([]);
+        });
+
+        it('deve remover símbolos duplicados', async () => {
+            nock('https://api.coingecko.com')
+                .get('/api/v3/search')
+                .query(true)
+                .reply(200, {
+                    coins: [
+                        { id: 'coin-a', symbol: 'dup', name: 'Coin A', thumb: '', market_cap_rank: 1 },
+                        { id: 'coin-b', symbol: 'dup', name: 'Coin B', thumb: '', market_cap_rank: 2 },
+                    ],
+                });
+
+            nock('https://api.coingecko.com')
+                .get('/api/v3/simple/price')
+                .query(true)
+                .reply(200, {
+                    'coin-a': { brl: 10, last_updated_at: 1731888000 },
+                    'coin-b': { brl: 20, last_updated_at: 1731888000 },
+                });
+
+            const res = await app.inject({ method: 'GET', url: '/api/busca?q=dup' });
+            expect(res.json().resultados).to.have.length(1);
+        });
+
+        it('deve retornar 502 quando a busca falha', async () => {
+            nock('https://api.coingecko.com')
+                .get('/api/v3/search')
+                .query(true)
+                .replyWithError('falha');
+
+            const res = await app.inject({ method: 'GET', url: '/api/busca?q=pepe' });
+            expect(res.statusCode).to.equal(502);
+        });
+    });
+
+    describe('formatarPrecoBRL', () => {
+        it('deve usar 2 casas para valores >= 1', () => {
+            expect(formatarPrecoBRL(425810)).to.equal('425.810,00');
+            expect(formatarPrecoBRL(12.5)).to.equal('12,50');
+        });
+
+        it('deve usar precisão adaptativa para valores pequenos', () => {
+            expect(formatarPrecoBRL(0.412567)).to.equal('0,4126');
+            expect(formatarPrecoBRL(0.00005)).to.equal('0,00005');
         });
     });
 

@@ -35,17 +35,27 @@ export function formatarHoraISO(iso) {
     });
 }
 
-/** Encontra uma coin pelo código */
-export function encontrarCoin(codigo) {
-    return COINS.find(c => c.code === codigo) || null;
+/** Encontra uma coin pelo código em uma lista (padrão: lista fixa) */
+export function encontrarCoin(codigo, lista = COINS) {
+    return lista.find(c => c.code === codigo) || null;
+}
+
+/** Escapa HTML para evitar injeção ao renderizar dados de APIs externas */
+export function escapeHtml(valor) {
+    return String(valor ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
 }
 
 /**
  * Monta os dados do preço principal a partir dos preços em memória.
  * Nunca quebra: retorna placeholders quando não há dados.
  */
-export function montarPrecoPrincipal(codigo, precos = {}) {
-    const coin = encontrarCoin(codigo);
+export function montarPrecoPrincipal(codigo, precos = {}, lista = COINS) {
+    const coin = encontrarCoin(codigo, lista);
     const info = precos?.[codigo];
 
     const simbolo = coin ? coin.symbol : '';
@@ -56,6 +66,41 @@ export function montarPrecoPrincipal(codigo, precos = {}) {
     }
 
     return { preco: `R$ ${info.rate}`, simbolo, nome };
+}
+
+/**
+ * Gera o HTML dos cards de resultados da busca.
+ * @param {Array} resultados - [{ id, code, name, thumb, rate }]
+ * @param {string} selecionada - código da coin selecionada
+ */
+export function montarResultadosHTML(resultados = [], selecionada = '') {
+    return resultados.map(coin => {
+        const isSelected = coin.code === selecionada;
+        const tema = isSelected ? 'text-warning' : 'text-muted';
+        const status = coin.rate ? 'online' : 's/ preço';
+        const statusClasse = coin.rate ? 'bg-success' : 'bg-secondary';
+
+        return `
+            <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                <div class="card h-100 moeda-card resultado-card ${isSelected ? 'selecionada' : ''}" data-code="${escapeHtml(coin.code)}" data-id="${escapeHtml(coin.id)}" role="button" tabindex="0" aria-pressed="${isSelected}">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="coin-code ${tema} small fw-bold">${escapeHtml(coin.code)}</span>
+                            <span class="badge ${statusClasse} rounded-pill">${status}</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 mb-2 resultado-identidade">
+                            ${coin.thumb ? `<img src="${escapeHtml(coin.thumb)}" alt="" width="24" height="24" class="rounded-circle resultado-thumb" loading="lazy" referrerpolicy="no-referrer">` : ''}
+                            <span class="moeda-nome resultado-nome">${escapeHtml(coin.name)}</span>
+                        </div>
+                        <div class="d-flex align-items-baseline flex-grow-1">
+                            <span class="moeda-simbolo me-1">R$</span>
+                            <span class="moeda-valor">${coin.rate ? escapeHtml(coin.rate) : '--,--'}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
 }
 
 /**

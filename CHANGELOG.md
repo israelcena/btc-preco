@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **Dashboard web**: página responsiva com Bootstrap 5 no estilo DolarHoje, exibindo cotações de criptomoedas em Real (BRL)
 - **10 criptomoedas**: BTC, ETH, ADA, SOL, DOGE, XRP, DOT, LTC, LINK e MATIC
+- **Busca de criptomoedas**: campo gigante com debounce que consulta a API de search da CoinGecko e exibe resultados (incluindo shitcoins e tokens) com preços em BRL; clicar no resultado atualiza o destaque
+  - `GET /api/busca?q=termo` — busca por nome/símbolo com preços em BRL
+- **Formatação adaptativa de preços**: valores pequenos usam 4 dígitos significativos (ex.: `0,00002654` em vez de `0,00`)
 - **Servidor Fastify**: serve o frontend e expõe API REST
   - `GET /api/precos` — cotações de todas as coins em BRL
   - `GET /api/preco/:moeda` — cotação de uma coin específica

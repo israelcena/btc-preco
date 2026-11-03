@@ -104,6 +104,31 @@
                 <p class="section-subtitle mb-0">Clique em uma criptomoeda para ver a cotação em Real no destaque acima</p>
             </div>
 
+            <!-- Busca de criptomoedas -->
+            <div class="search-panel">
+                <form id="form-busca" class="search-form" role="search" aria-label="Buscar criptomoedas">
+                    <i class="bi bi-search search-icon" aria-hidden="true"></i>
+                    <input
+                        id="input-busca"
+                        class="search-input"
+                        type="search"
+                        placeholder="Busque por Bitcoin, Pepe, Shiba Inu, Solana..."
+                        autocomplete="off"
+                        spellcheck="false"
+                        aria-label="Nome ou símbolo da criptomoeda"
+                    >
+                    <button class="btn btn-brand search-btn" type="submit" id="btn-busca">
+                        <i class="bi bi-search me-1"></i>Buscar
+                    </button>
+                </form>
+                <div id="busca-status" class="search-status" aria-live="polite"></div>
+            </div>
+
+            <!-- Resultados da busca -->
+            <div class="row g-3 mt-1" id="resultados-busca">
+                <!-- Cards de resultado injetados via JS -->
+            </div>
+
             <div class="row g-3" id="grid-moedas">
                 <!-- Cards injetados via JS -->
             </div>
