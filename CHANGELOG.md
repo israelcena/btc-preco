@@ -5,6 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-11-03
+
+### Added
+- **Dashboard web**: página responsiva com Bootstrap 5 no estilo DolarHoje, exibindo cotações de criptomoedas em Real (BRL)
+- **10 criptomoedas**: BTC, ETH, ADA, SOL, DOGE, XRP, DOT, LTC, LINK e MATIC
+- **Servidor Fastify**: serve o frontend e expõe API REST
+  - `GET /api/precos` — cotações de todas as coins em BRL
+  - `GET /api/preco/:moeda` — cotação de uma coin específica
+  - `GET /api/variacao` — variação de 24h do Bitcoin
+  - `GET /api/health` — health check
+- **Interatividade**: clique (ou Enter/Espaço) em um card atualiza o preço em destaque no topo
+- **Atualização automática** dos preços a cada 60 segundos e botão de refresh manual
+- **Testes automatizados**: 29 novos testes (41 no total)
+  - `tests/core.spec.js` — lógica pura (formatação, seleção, geração de cards)
+  - `tests/server.spec.js` — endpoints com `app.inject()` e mock da CoinGecko via `nock`
+  - `tests/frontend.spec.js` — contrato HTML ↔ JS
+- **Scripts**: `npm start` e `npm run dev` para subir o servidor
+
+### Changed
+- **Frontend modular**: lógica pura extraída para `js/core.js` (testável em Node e browser)
+- **`js/app.js`** agora é um ES module
+- **`server.js`** refatorado com `buildApp()` exportável para testes sem subir servidor
+- **Script de testes** compatível com Windows (sem `./node_modules/.bin/`)
+- **Tema escuro** do dashboard com melhor contraste e legibilidade
+
+### Fixed
+- **Clique nos cards**: selecionar uma moeda não recria mais os cards nem reseta os valores para `--,--`
+- **Contraste**: seção de cards não usa mais fundo claro com texto claro
+- **Variação 24h**: busca via backend (`/api/variacao`), evitando chamadas diretas do browser à CoinGecko
+- **Endpoint individual**: `last_updated_at` agora funciona para qualquer coin (não só Bitcoin)
+
 ## [1.1.0] - 2026-10-07
 
 ### Added
