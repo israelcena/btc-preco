@@ -249,7 +249,8 @@ const app = {
             }
 
             const data = await response.json();
-            this.precos = { ...(data.precos || {}), ...this.precos };
+            // Atualiza os preços fixos sem perder os extras vindos da busca
+            this.precos = { ...this.precos, ...(data.precos || {}) };
             this.ultimaAtualizacao = data.updated_at;
 
             // Atualiza valores dos cards fixos

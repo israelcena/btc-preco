@@ -7,9 +7,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 
 describe('Integridade do frontend (contrato HTML <-> JS)', () => {
-    const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-    const appJs = fs.readFileSync(path.join(root, 'js/app.js'), 'utf8');
-    const coreJs = fs.readFileSync(path.join(root, 'js/core.js'), 'utf8');
+    const html = fs.readFileSync(path.join(root, 'public/index.html'), 'utf8');
+    const appJs = fs.readFileSync(path.join(root, 'public/js/app.js'), 'utf8');
+    const coreJs = fs.readFileSync(path.join(root, 'public/js/core.js'), 'utf8');
 
     it('index.html deve conter todos os IDs usados pelo app.js', () => {
         const ids = [
@@ -51,7 +51,7 @@ describe('Integridade do frontend (contrato HTML <-> JS)', () => {
     });
 
     it('CSS deve conter breakpoints para mobile, tablet e telas gigantes', () => {
-        const css = fs.readFileSync(path.join(root, 'css/style.css'), 'utf8');
+        const css = fs.readFileSync(path.join(root, 'public/css/style.css'), 'utf8');
         expect(css, 'breakpoint mobile').to.include('@media (max-width: 575.98px)');
         expect(css, 'breakpoint tablet').to.include('@media (min-width: 576px) and (max-width: 991.98px)');
         expect(css, 'breakpoint desktop grande').to.include('@media (min-width: 1400px)');
@@ -59,11 +59,12 @@ describe('Integridade do frontend (contrato HTML <-> JS)', () => {
         expect(css, 'suporte a reduced motion').to.include('@media (prefers-reduced-motion: reduce)');
     });
 
-    it('CSS deve estilizar o campo de busca gigante', () => {
-        const css = fs.readFileSync(path.join(root, 'css/style.css'), 'utf8');
+    it('CSS deve estilizar o campo de busca gigante (pill) sem sobreposição', () => {
+        const css = fs.readFileSync(path.join(root, 'public/css/style.css'), 'utf8');
         expect(css).to.include('.search-input');
         expect(css).to.include('.search-panel');
-        expect(css).to.include('height: 64px');
+        expect(css).to.include('border-radius: 999px');
+        expect(css).to.include('flex: 1 1 auto;');
     });
 
     it('index.html deve conter o formulário de busca acessível', () => {

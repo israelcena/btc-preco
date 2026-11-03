@@ -8,7 +8,7 @@ import {
     montarCardsHTML,
     montarResultadosHTML,
     escapeHtml,
-} from '../js/core.js';
+} from '../public/js/core.js';
 
 describe('core.js - Lógica do frontend', () => {
     describe('formatarNumero', () => {

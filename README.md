@@ -157,10 +157,21 @@ npm run build
 
 ```
 btc-preco/
+├── public/               # Frontend web
+│   ├── index.html        # Página do dashboard
+│   ├── css/style.css     # Tema e responsividade
+│   └── js/
+│       ├── app.js        # Lógica da interface (busca, cards, destaque)
+│       └── core.js       # Lógica pura (testável em Node)
 ├── src/
 │   └── main.js           # Código principal do CLI
 ├── tests/
-│   └── main.spec.js      # Testes unitários
+│   ├── main.spec.js      # Testes do CLI
+│   ├── core.spec.js      # Testes da lógica pura
+│   ├── server.spec.js    # Testes da API Fastify
+│   ├── frontend.spec.js  # Contrato HTML/JS e breakpoints
+│   └── app.spec.js       # Testes de navegador com jsdom
+├── server.js             # Servidor Fastify + API
 ├── bin/                  # Código compilado (gerado)
 ├── package.json
 ├── babel.config.json

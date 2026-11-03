@@ -155,10 +155,10 @@ export async function fetchBitcoinVariation() {
 export function buildApp(options = {}) {
     const app = fastify({ logger: options.logger ?? false });
 
-    // Registra servidor de arquivos estáticos
+    // Serve apenas o frontend (public/), sem expor node_modules ou o código do servidor
     app.register(fastifyStatic, {
-        root: path.join(__dirname),
-        wildcard: false,
+        root: path.join(__dirname, 'public'),
+        wildcard: true,
     });
 
     // API: lista de preços de todas as criptomoedas em BRL

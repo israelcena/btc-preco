@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `GET /api/health` — health check
 - **Interatividade**: clique (ou Enter/Espaço) em um card atualiza o preço em destaque no topo
 - **Atualização automática** dos preços a cada 60 segundos e botão de refresh manual
-- **Testes automatizados**: 29 novos testes (41 no total)
+- **Testes automatizados**: 29 novos testes (41 no total), incluindo testes de navegador com `jsdom` (busca, clique e destaque)
   - `tests/core.spec.js` — lógica pura (formatação, seleção, geração de cards)
   - `tests/server.spec.js` — endpoints com `app.inject()` e mock da CoinGecko via `nock`
   - `tests/frontend.spec.js` — contrato HTML ↔ JS
@@ -38,6 +38,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **README** atualizado com a nova versão mínima do Node
 
 ### Fixed
+- **Campo de busca**: layout refeito em estilo pill, corrigindo sobreposição do input com o botão
+- **Atualização de preços**: merge corrigido, os valores agora atualizam sem perder os extras da busca
+- **Segurança/performance**: frontend movido para `public/` e servidor restrito a essa pasta — `node_modules` não é mais enumerado nem exposto (a inicialização da API caiu de >2s para <1s)
 - **Clique nos cards**: selecionar uma moeda não recria mais os cards nem reseta os valores para `--,--`
 - **Contraste**: seção de cards não usa mais fundo claro com texto claro
 - **Variação 24h**: busca via backend (`/api/variacao`), evitando chamadas diretas do browser à CoinGecko
