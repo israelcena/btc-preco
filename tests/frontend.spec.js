@@ -74,6 +74,20 @@ describe('Integridade do frontend (contrato HTML <-> JS)', () => {
         expect(html).to.include('id="resultados-busca"');
     });
 
+    it('CSS deve destacar o card selecionado com escala e mais espaço interno', () => {
+        const css = fs.readFileSync(path.join(root, 'public/css/style.css'), 'utf8');
+        expect(css).to.include('.moeda-card.selecionada');
+        expect(css).to.include('transform: scale(1.06)');
+        expect(css).to.include('.moeda-card.selecionada .card-body');
+        expect(css).to.include('padding: 1.45rem 1.35rem');
+        // No mobile a escala reduz para não vazar da tela
+        expect(css).to.include('transform: scale(1.02)');
+    });
+
+    it('app.js não deve rolar a página ao selecionar uma moeda', () => {
+        expect(appJs).to.not.include('scrollIntoView');
+    });
+
     it('app.js não deve usar onclick inline (evita dependência de global)', () => {
         expect(html).to.not.include('onclick="app.atualizar()"');
         expect(html).to.include('id="btn-atualizar"');

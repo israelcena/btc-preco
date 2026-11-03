@@ -219,10 +219,6 @@ const app = {
         });
 
         this.atualizarPrecoPrincipal();
-
-        // Rola suavemente até o destaque
-        this.elementos.precoPrincipal.closest('.hero-card')
-            ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     },
 
     /** Atualiza o preço principal com os dados já carregados em memória */

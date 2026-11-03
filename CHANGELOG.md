@@ -20,7 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `GET /api/health` — health check
 - **Interatividade**: clique (ou Enter/Espaço) em um card atualiza o preço em destaque no topo
 - **Atualização automática** dos preços a cada 60 segundos e botão de refresh manual
-- **Testes automatizados**: 29 novos testes (41 no total), incluindo testes de navegador com `jsdom` (busca, clique e destaque)
+- **Destaque ao clicar**: o card selecionado cresce (`scale(1.06)`), ganha mais espaço interno e sombra reforçada; os resultados da busca usam o mesmo visual e efeito
+- **Testes automatizados**: 54 novos testes (66 no total), incluindo testes de navegador com `jsdom` (busca, clique e destaque)
   - `tests/core.spec.js` — lógica pura (formatação, seleção, geração de cards)
   - `tests/server.spec.js` — endpoints com `app.inject()` e mock da CoinGecko via `nock`
   - `tests/frontend.spec.js` — contrato HTML ↔ JS

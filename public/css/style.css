@@ -293,49 +293,65 @@ main,
     display: none;
 }
 
-/* ---------- Cards de criptomoedas ---------- */
-#grid-moedas .moeda-card {
+/* ---------- Cards de criptomoedas e resultados ---------- */
+.moeda-card {
     position: relative;
     background: var(--card);
     border: 1px solid var(--line);
     border-radius: 16px;
     color: var(--ink);
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
     height: 100%;
     user-select: none;
+    will-change: transform;
 }
 
-#grid-moedas .moeda-card:hover {
+.moeda-card .card-body {
+    padding: 1.15rem 1.2rem;
+    transition: padding 0.25s ease;
+}
+
+.moeda-card:hover {
     transform: translateY(-3px);
     border-color: #f7c27a;
     box-shadow: 0 12px 26px rgba(31, 41, 55, 0.1);
 }
 
-#grid-moedas .moeda-card:focus-visible {
+.moeda-card:focus-visible {
     outline: 3px solid rgba(247, 147, 26, 0.45);
     outline-offset: 2px;
 }
 
-#grid-moedas .moeda-card.selecionada {
+/* Efeito de destaque ao clicar: card cresce e ganha mais espaço interno */
+.moeda-card.selecionada {
+    transform: scale(1.06);
+    z-index: 3;
     border-color: var(--brand);
     background: var(--brand-soft);
-    box-shadow: 0 0 0 2px rgba(247, 147, 26, 0.35), 0 12px 26px rgba(31, 41, 55, 0.1);
+    box-shadow: 0 0 0 3px rgba(247, 147, 26, 0.28), 0 18px 40px rgba(31, 41, 55, 0.18);
 }
 
-#grid-moedas .moeda-card .card-body {
-    padding: 1.15rem 1.2rem;
+.moeda-card.selecionada .card-body {
+    padding: 1.45rem 1.35rem;
+}
+
+/* Sobe mais ao passar o mouse no card já selecionado */
+@media (hover: hover) {
+    .moeda-card.selecionada:hover {
+        transform: translateY(-3px) scale(1.07);
+    }
 }
 
 /* Código/moeda no topo do card */
-#grid-moedas .coin-code {
+.moeda-card .coin-code {
     color: var(--muted) !important;
     font-size: 0.8rem;
     letter-spacing: 0.4px;
 }
 
-#grid-moedas .moeda-card.selecionada .coin-code,
-#grid-moedas .coin-code.text-warning {
+.moeda-card.selecionada .coin-code,
+.moeda-card .coin-code.text-warning {
     color: var(--brand-dark) !important;
 }
 
@@ -361,13 +377,13 @@ main,
 }
 
 /* Badges de status com bom contraste em fundo claro */
-#grid-moedas .badge.bg-success {
+.moeda-card .badge.bg-success {
     background-color: var(--green-soft) !important;
     color: var(--green) !important;
     font-weight: 600;
 }
 
-#grid-moedas .badge.bg-secondary {
+.moeda-card .badge.bg-secondary {
     background-color: #f3f4f6 !important;
     color: var(--ink-soft) !important;
     font-weight: 600;
@@ -446,7 +462,7 @@ html {
         padding: 48px 0 56px;
     }
 
-    #grid-moedas .moeda-valor {
+    .moeda-valor {
         font-size: 1.35rem;
     }
 
@@ -549,12 +565,21 @@ html {
         font-size: 0.88rem;
     }
 
-    #grid-moedas .moeda-card .card-body {
+    .moeda-card .card-body {
         padding: 0.95rem 1rem;
     }
 
-    #grid-moedas .moeda-card {
+    .moeda-card {
         min-height: 112px;
+    }
+
+    /* No mobile a escala é menor para o card não vazar da tela */
+    .moeda-card.selecionada {
+        transform: scale(1.02);
+    }
+
+    .moeda-card.selecionada .card-body {
+        padding: 1.1rem 1.05rem;
     }
 
     .moeda-simbolo {
@@ -618,7 +643,7 @@ html {
         font-size: 1.1rem;
     }
 
-    #grid-moedas .moeda-card .card-body {
+    .moeda-card .card-body {
         padding: 0.85rem;
     }
 }
@@ -685,7 +710,7 @@ html {
         max-width: 20%;
     }
 
-    #grid-moedas .moeda-card .card-body {
+    .moeda-card .card-body {
         padding: 1.4rem 1.35rem;
     }
 
@@ -722,15 +747,15 @@ html {
 
 /* ---------- Hover apenas em dispositivos com mouse ---------- */
 @media (hover: none) {
-    #grid-moedas .moeda-card:hover {
+    .moeda-card:hover:not(.selecionada) {
         transform: none;
         box-shadow: none;
         border-color: var(--line);
     }
 
-    #grid-moedas .moeda-card.selecionada:hover {
+    .moeda-card.selecionada:hover {
         border-color: var(--brand);
-        box-shadow: 0 0 0 2px rgba(247, 147, 26, 0.35), 0 12px 26px rgba(31, 41, 55, 0.1);
+        box-shadow: 0 0 0 3px rgba(247, 147, 26, 0.28), 0 18px 40px rgba(31, 41, 55, 0.18);
     }
 }
 
@@ -744,7 +769,7 @@ html {
         animation-duration: 3s;
     }
 
-    #grid-moedas .moeda-card,
+    .moeda-card,
     .btn-brand {
         transition: none;
     }
