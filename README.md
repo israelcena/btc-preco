@@ -1,7 +1,7 @@
 # BTC-Preço 💰
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js Version](https://img.shields.io/badge/node-%3E%3D14.0.0-brightgreen)](https://nodejs.org/)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.19.0-brightgreen)](https://nodejs.org/)
 [![Coverage](https://img.shields.io/badge/coverage-%3E%3D80%25-brightgreen)](https://github.com/israelcena/btc-preco)
 
 Um CLI moderno e elegante para consultar o preço do Bitcoin em tempo real em diferentes moedas.
@@ -130,8 +130,8 @@ Fetching Bitcoin price in EUR...
 
 ### Pré-requisitos
 
-- Node.js >= 14.0.0
-- npm >= 6.0.0
+- Node.js >= 20.19.0 (recomendado: Node 24 LTS)
+- npm >= 10.0.0
 
 ### Configuração do ambiente de desenvolvimento
 

@@ -29,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`server.js`** refatorado com `buildApp()` exportável para testes sem subir servidor
 - **Script de testes** compatível com Windows (sem `./node_modules/.bin/`)
 - **Tema escuro** do dashboard com melhor contraste e legibilidade
+- **Requisito de Node.js** atualizado para `>=20.19.0` (exigido por Babel 8 e Fastify 5), com `engines` no `package.json` e `.nvmrc` apontando para Node 24 LTS
+- **README** atualizado com a nova versão mínima do Node
 
 ### Fixed
 - **Clique nos cards**: selecionar uma moeda não recria mais os cards nem reseta os valores para `--,--`
