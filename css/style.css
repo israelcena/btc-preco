@@ -311,15 +311,286 @@ main,
     animation: spin 1s linear infinite;
 }
 
-/* ---------- Responsividade ---------- */
-@media (max-width: 575px) {
+/* =========================================
+   Responsividade
+   ========================================= */
+
+/* Evita zoom acidental em inputs e melhora toque */
+html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+}
+
+/* ---------- Tablets (576px - 991px) ---------- */
+@media (min-width: 576px) and (max-width: 991.98px) {
     .hero {
-        padding: 32px 0 28px;
+        padding: 40px 0 32px;
     }
-    .coins-section {
-        padding: 40px 0 48px;
+
+    .hero-card .card-body {
+        padding: 2rem 1.75rem !important;
     }
+
     .price-value {
-        font-size: 2.5rem;
+        font-size: clamp(3rem, 7vw, 4rem);
+    }
+
+    .coins-section {
+        padding: 48px 0 56px;
+    }
+
+    #grid-moedas .moeda-valor {
+        font-size: 1.35rem;
+    }
+
+    .navbar-collapse {
+        margin-top: 0.75rem;
+        padding: 0.5rem 0.25rem 0.25rem;
+        border-top: 1px solid var(--line);
+    }
+
+    .navbar .nav-link {
+        padding: 0.65rem 0.75rem !important;
+    }
+}
+
+/* ---------- Mobile (até 575px) ---------- */
+@media (max-width: 575.98px) {
+    .navbar {
+        padding-top: 0.65rem;
+        padding-bottom: 0.65rem;
+    }
+
+    .navbar-brand {
+        font-size: 1.1rem;
+    }
+
+    .brand-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 1.05rem;
+        border-radius: 10px;
+    }
+
+    .navbar-collapse {
+        margin-top: 0.6rem;
+        padding: 0.4rem 0.15rem 0.25rem;
+        border-top: 1px solid var(--line);
+    }
+
+    .navbar .nav-link {
+        padding: 0.65rem 0.75rem !important;
+    }
+
+    .hero {
+        padding: 20px 0 24px;
+    }
+
+    .hero-card {
+        border-radius: 18px !important;
+    }
+
+    .hero-card .card-body {
+        padding: 1.4rem 1.1rem !important;
+    }
+
+    .badge-live {
+        font-size: 0.78rem;
+    }
+
+    .price-value {
+        font-size: clamp(2.1rem, 10vw, 2.9rem);
+        letter-spacing: -1px;
+    }
+
+    .price-subtitle {
+        font-size: 1rem;
+    }
+
+    .price-subtitle .text-muted-strong {
+        display: block;
+        font-size: 0.9rem;
+        margin-top: 2px;
+    }
+
+    .stat-box {
+        padding: 0.7rem 0.5rem;
+    }
+
+    .stat-label {
+        font-size: 0.68rem;
+        letter-spacing: 0.4px;
+    }
+
+    .stat-value {
+        font-size: 1rem;
+    }
+
+    .coins-section {
+        padding: 32px 0 40px;
+    }
+
+    .section-title {
+        font-size: 1.35rem;
+    }
+
+    .section-subtitle {
+        font-size: 0.88rem;
+    }
+
+    #grid-moedas .moeda-card .card-body {
+        padding: 0.95rem 1rem;
+    }
+
+    #grid-moedas .moeda-card {
+        min-height: 112px;
+    }
+
+    .moeda-simbolo {
+        font-size: 1.35rem;
+    }
+
+    .moeda-valor {
+        font-size: 1.25rem;
+    }
+
+    .moeda-nome {
+        font-size: 0.76rem;
+    }
+
+    .site-footer {
+        padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+    }
+
+    .btn-brand {
+        min-height: 42px;
+    }
+}
+
+/* ---------- Mobile muito pequeno (até 360px) ---------- */
+@media (max-width: 359.98px) {
+    .price-value {
+        font-size: 1.9rem;
+    }
+
+    .moeda-valor {
+        font-size: 1.1rem;
+    }
+
+    #grid-moedas .moeda-card .card-body {
+        padding: 0.85rem;
+    }
+}
+
+/* ---------- Desktop grande (1400px+) ---------- */
+@media (min-width: 1400px) {
+    .hero .container,
+    .coins-section .container,
+    .navbar .container,
+    .site-footer .container {
+        max-width: 1320px;
+    }
+
+    .hero {
+        padding: 56px 0 44px;
+    }
+
+    .hero-card .card-body {
+        padding: 3rem 2.5rem !important;
+    }
+
+    .coins-section {
+        padding: 64px 0 72px;
+    }
+}
+
+/* ---------- Telas gigantes / ultrawide (1800px+) ---------- */
+@media (min-width: 1800px) {
+    .hero .container,
+    .coins-section .container,
+    .navbar .container,
+    .site-footer .container {
+        max-width: 1640px;
+    }
+
+    .hero-card {
+        max-width: 980px;
+        margin: 0 auto;
+    }
+
+    .hero-card .card-body {
+        padding: 3.5rem 3rem !important;
+    }
+
+    .price-value {
+        font-size: clamp(5rem, 6vw, 6.5rem);
+    }
+
+    .price-subtitle {
+        font-size: 1.6rem;
+    }
+
+    .section-title {
+        font-size: 2.4rem;
+    }
+
+    .section-subtitle {
+        font-size: 1.1rem;
+    }
+
+    /* 5 cards por linha em telas muito largas */
+    #grid-moedas > [class*="col-"] {
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+
+    #grid-moedas .moeda-card .card-body {
+        padding: 1.4rem 1.35rem;
+    }
+
+    .moeda-valor {
+        font-size: 1.6rem;
+    }
+
+    .moeda-simbolo {
+        font-size: 1.75rem;
+    }
+
+    .moeda-nome {
+        font-size: 0.88rem;
+    }
+
+    .coins-section {
+        padding: 80px 0 96px;
+    }
+}
+
+/* ---------- Hover apenas em dispositivos com mouse ---------- */
+@media (hover: none) {
+    #grid-moedas .moeda-card:hover {
+        transform: none;
+        box-shadow: none;
+        border-color: var(--line);
+    }
+
+    #grid-moedas .moeda-card.selecionada:hover {
+        border-color: var(--brand);
+        box-shadow: 0 0 0 2px rgba(247, 147, 26, 0.35), 0 12px 26px rgba(31, 41, 55, 0.1);
+    }
+}
+
+/* ---------- Acessibilidade: reduzir movimento ---------- */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    .animate-spin {
+        animation-duration: 3s;
+    }
+
+    #grid-moedas .moeda-card,
+    .btn-brand {
+        transition: none;
     }
 }

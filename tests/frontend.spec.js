@@ -45,6 +45,15 @@ describe('Integridade do frontend (contrato HTML <-> JS)', () => {
         expect(unicos.size).to.equal(matches.length);
     });
 
+    it('CSS deve conter breakpoints para mobile, tablet e telas gigantes', () => {
+        const css = fs.readFileSync(path.join(root, 'css/style.css'), 'utf8');
+        expect(css, 'breakpoint mobile').to.include('@media (max-width: 575.98px)');
+        expect(css, 'breakpoint tablet').to.include('@media (min-width: 576px) and (max-width: 991.98px)');
+        expect(css, 'breakpoint desktop grande').to.include('@media (min-width: 1400px)');
+        expect(css, 'breakpoint ultrawide').to.include('@media (min-width: 1800px)');
+        expect(css, 'suporte a reduced motion').to.include('@media (prefers-reduced-motion: reduce)');
+    });
+
     it('app.js não deve usar onclick inline (evita dependência de global)', () => {
         expect(html).to.not.include('onclick="app.atualizar()"');
         expect(html).to.include('id="btn-atualizar"');

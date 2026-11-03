@@ -29,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`server.js`** refatorado com `buildApp()` exportável para testes sem subir servidor
 - **Script de testes** compatível com Windows (sem `./node_modules/.bin/`)
 - **Redesign do dashboard**: tema claro moderno com paleta laranja do Bitcoin, cards brancos, sombras suaves e textos com contraste adequado (substitui o tema escuro)
+- **Responsividade completa**: layouts dedicados para mobile (<576px, incluindo <360px), tablet (576–991px), desktop (1400px+) e ultrawide (1800px+, com 5 cards por linha e container ampliado)
+- **Acessibilidade de movimento**: respeita `prefers-reduced-motion`; hover desativado em dispositivos touch
 - **Requisito de Node.js** atualizado para `>=20.19.0` (exigido por Babel 8 e Fastify 5), com `engines` no `package.json` e `.nvmrc` apontando para Node 24 LTS
 - **README** atualizado com a nova versão mínima do Node
 
