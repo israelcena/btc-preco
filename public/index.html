@@ -129,6 +129,16 @@
                 <!-- Cards de resultado injetados via JS -->
             </div>
 
+            <!-- Estado vazio da busca -->
+            <div id="busca-vazia" class="busca-vazia d-none" role="status" aria-live="polite">
+                <div class="busca-vazia-icone" aria-hidden="true">
+                    <i id="busca-vazia-icone" class="bi bi-search"></i>
+                    <i id="busca-vazia-x" class="bi bi-x-lg busca-vazia-x"></i>
+                </div>
+                <p id="busca-vazia-titulo" class="busca-vazia-titulo mb-1">Nenhuma criptomoeda encontrada</p>
+                <p id="busca-vazia-texto" class="busca-vazia-texto mb-0">Tente outro nome ou símbolo.</p>
+            </div>
+
             <div class="row g-4 mt-4" id="grid-moedas">
                 <!-- Cards injetados via JS -->
             </div>

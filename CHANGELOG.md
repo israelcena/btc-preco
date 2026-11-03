@@ -21,9 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Interatividade**: clique (ou Enter/Espaço) em um card atualiza o preço em destaque no topo
 - **Atualização automática** dos preços a cada 60 segundos e botão de refresh manual
 - **Destaque ao clicar**: o card selecionado cresce (`scale(1.06)`) com sombra reforçada e mais espaço ao redor (grade com gutters maiores); no mobile a escala é reduzida
-- **Busca integrada**: os resultados substituem os cards padrão enquanto a busca está ativa e usam exatamente o mesmo layout/efeito, voltando ao normal ao limpar o campo
+- **Busca integrada**: os resultados substituem os cards padrão enquanto a busca está ativa e usam exatamente o mesmo layout/efeito; sem resultados, **nenhum card é exibido** — aparece um estado vazio com ícone de lupa e a sugestão de tentar outro termo
 - **Animações (inspiradas no Animista)**: entrada em cascata dos cards quando os resultados substituem a grade, pulso no card selecionado, "pop" no preço em destaque e fade na mensagem de status — com suporte a `prefers-reduced-motion`
-- **Testes automatizados**: 60 novos testes (72 no total), incluindo testes de navegador com `jsdom` (busca, clique e destaque)
+- **Testes automatizados**: 62 novos testes (74 no total), incluindo testes de navegador com `jsdom` (busca, clique e destaque)
   - `tests/core.spec.js` — lógica pura (formatação, seleção, geração de cards)
   - `tests/server.spec.js` — endpoints com `app.inject()` e mock da CoinGecko via `nock`
   - `tests/frontend.spec.js` — contrato HTML ↔ JS

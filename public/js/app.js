@@ -27,6 +27,11 @@ const app = {
         btnBusca: document.getElementById('btn-busca'),
         buscaStatus: document.getElementById('busca-status'),
         resultadosBusca: document.getElementById('resultados-busca'),
+        buscaVazia: document.getElementById('busca-vazia'),
+        buscaVaziaIcone: document.getElementById('busca-vazia-icone'),
+        buscaVaziaX: document.getElementById('busca-vazia-x'),
+        buscaVaziaTitulo: document.getElementById('busca-vazia-titulo'),
+        buscaVaziaTexto: document.getElementById('busca-vazia-texto'),
     },
 
     moedaSelecionada: 'BTC',
@@ -180,7 +185,12 @@ const app = {
             this.renderResultados();
 
             if (this.resultados.length === 0) {
-                this.definirStatus(`Nenhuma criptomoeda encontrada para "${termo}".`, 'text-danger');
+                this.definirStatus('', '');
+                this.mostrarBuscaVazia(
+                    `Nenhuma criptomoeda encontrada para "${termo}"`,
+                    'Tente outro nome ou símbolo, como "pepe", "shiba" ou "doge".',
+                    'vazio'
+                );
             } else {
                 const total = this.resultados.length;
                 this.definirStatus(
@@ -192,7 +202,12 @@ const app = {
             console.error(error);
             this.resultados = [];
             this.renderResultados();
-            this.definirStatus('Não foi possível buscar agora. Tente novamente.', 'text-danger');
+            this.definirStatus('', '');
+            this.mostrarBuscaVazia(
+                'Não foi possível buscar agora',
+                'Verifique sua conexão e tente novamente em instantes.',
+                'erro'
+            );
         } finally {
             this.setLoadingBusca(false);
         }
@@ -201,19 +216,38 @@ const app = {
     /** Renderiza os resultados da busca, substituindo os cards padrão */
     renderResultados() {
         const temResultados = this.resultados.length > 0;
-        const gridEstavaOculta = this.elementos.gridMoedas.classList.contains('d-none');
 
         this.elementos.resultadosBusca.innerHTML = montarResultadosHTML(this.resultados, this.moedaSelecionada);
 
-        // Resultados substituem a grade padrão; sem resultados, ela volta a aparecer
-        this.elementos.gridMoedas.classList.toggle('d-none', temResultados);
+        // Durante uma busca ativa a grade padrão fica sempre oculta,
+        // inclusive quando nenhum resultado é encontrado.
+        this.elementos.gridMoedas.classList.add('d-none');
 
-        // Animista: entrada em cascata dos cards que acabaram de aparecer
         if (temResultados) {
+            this.esconderBuscaVazia();
             this.animarEntrada(this.elementos.resultadosBusca);
-        } else if (gridEstavaOculta) {
-            this.animarEntrada(this.elementos.gridMoedas);
         }
+    },
+
+    /** Mostra o aviso de busca vazia/erro com ícone, sem exibir cards */
+    mostrarBuscaVazia(titulo, dica, tipo = 'vazio') {
+        const { buscaVazia, buscaVaziaIcone, buscaVaziaX, buscaVaziaTitulo, buscaVaziaTexto } = this.elementos;
+
+        buscaVaziaIcone.className = tipo === 'erro' ? 'bi bi-exclamation-triangle' : 'bi bi-search';
+        buscaVaziaX.classList.toggle('d-none', tipo === 'erro');
+        buscaVaziaTitulo.textContent = titulo;
+        buscaVaziaTexto.textContent = dica;
+
+        buscaVazia.classList.remove('d-none');
+        buscaVazia.classList.remove('busca-vazia-animada');
+        void buscaVazia.offsetWidth;
+        buscaVazia.classList.add('busca-vazia-animada');
+    },
+
+    /** Oculta o aviso de busca vazia/erro */
+    esconderBuscaVazia() {
+        this.elementos.buscaVazia.classList.add('d-none');
+        this.elementos.buscaVazia.classList.remove('busca-vazia-animada');
     },
 
     /** Limpa busca e resultados */
@@ -222,6 +256,7 @@ const app = {
 
         this.resultados = [];
         this.elementos.resultadosBusca.innerHTML = '';
+        this.esconderBuscaVazia();
         this.elementos.gridMoedas.classList.remove('d-none');
         if (gridEstavaOculta) this.animarEntrada(this.elementos.gridMoedas);
         this.definirStatus('', '');

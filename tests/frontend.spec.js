@@ -25,6 +25,11 @@ describe('Integridade do frontend (contrato HTML <-> JS)', () => {
             'btn-busca',
             'busca-status',
             'resultados-busca',
+            'busca-vazia',
+            'busca-vazia-icone',
+            'busca-vazia-x',
+            'busca-vazia-titulo',
+            'busca-vazia-texto',
         ];
 
         ids.forEach(id => {
@@ -67,11 +72,21 @@ describe('Integridade do frontend (contrato HTML <-> JS)', () => {
         expect(css).to.include('flex: 1 1 auto;');
     });
 
+    it('CSS deve estilizar o estado vazio da busca com ícone', () => {
+        const css = fs.readFileSync(path.join(root, 'public/css/style.css'), 'utf8');
+        expect(css).to.include('.busca-vazia');
+        expect(css).to.include('.busca-vazia-icone');
+        expect(css).to.include('.busca-vazia-x');
+    });
+
     it('index.html deve conter o formulário de busca acessível', () => {
         expect(html).to.include('id="form-busca"');
         expect(html).to.include('role="search"');
         expect(html).to.include('id="input-busca"');
         expect(html).to.include('id="resultados-busca"');
+        expect(html).to.include('id="busca-vazia"');
+        expect(html).to.include('bi bi-search');
+        expect(html).to.include('bi bi-x-lg');
     });
 
     it('CSS deve destacar o card selecionado com escala e espaço ao redor', () => {

@@ -72,7 +72,10 @@ describe('Frontend (jsdom) - Busca e interação', () => {
 
             if (destino.includes('/api/precos')) return responder(PRECOS_MOCK);
             if (destino.includes('/api/variacao')) return responder({ variacao: 1.5 });
-            if (destino.includes('/api/busca')) return responder(BUSCA_MOCK);
+            if (destino.includes('/api/busca')) {
+                if (destino.includes('zzzz')) return responder({ resultados: [] });
+                return responder(BUSCA_MOCK);
+            }
 
             return {
                 ok: false,
@@ -148,6 +151,24 @@ describe('Frontend (jsdom) - Busca e interação', () => {
         expect(cardPepe.classList.contains('selecionada')).to.equal(true);
     });
 
+    it('não deve exibir cards quando a busca não encontra nada', async () => {
+        const input = document.getElementById('input-busca');
+        input.value = 'zzzz';
+        document.getElementById('form-busca').dispatchEvent(
+            new dom.window.Event('submit', { bubbles: true, cancelable: true })
+        );
+
+        await esperar();
+
+        expect(document.getElementById('grid-moedas').classList.contains('d-none')).to.equal(true);
+        expect(document.getElementById('resultados-busca').innerHTML).to.equal('');
+
+        const vazia = document.getElementById('busca-vazia');
+        expect(vazia.classList.contains('d-none')).to.equal(false);
+        expect(vazia.textContent).to.contain('Nenhuma criptomoeda encontrada');
+        expect(document.getElementById('busca-status').textContent).to.equal('');
+    });
+
     it('deve limpar a busca e voltar aos cards padrão', async () => {
         const input = document.getElementById('input-busca');
         input.value = '';
@@ -158,6 +179,7 @@ describe('Frontend (jsdom) - Busca e interação', () => {
         expect(document.getElementById('resultados-busca').innerHTML).to.equal('');
         expect(document.getElementById('grid-moedas').classList.contains('d-none')).to.equal(false);
         expect(document.getElementById('grid-moedas').classList.contains('entrada-animada')).to.equal(true);
+        expect(document.getElementById('busca-vazia').classList.contains('d-none')).to.equal(true);
     });
 
     it('deve voltar ao BTC ao clicar em um card fixo', async () => {
