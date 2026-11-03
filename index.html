@@ -18,15 +18,15 @@
 <body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="#">
-                <div class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 36px; height: 36px; font-size: 1.2rem;">
+                <div class="brand-icon d-flex align-items-center justify-content-center me-2">
                     <i class="bi bi-currency-bitcoin"></i>
                 </div>
-                <span class="fw-bold">Crypto <span class="text-warning">Preço</span></span>
+                <span class="fw-bold">Crypto <span class="text-brand">Preço</span></span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Abrir menu">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -38,7 +38,7 @@
                         <a class="nav-link" href="#moedas">Criptomoedas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-warning" href="https://github.com/israelcena/btc-preco" target="_blank">
+                        <a class="nav-link nav-github" href="https://github.com/israelcena/btc-preco" target="_blank" rel="noopener">
                             <i class="bi bi-github me-1"></i>GitHub
                         </a>
                     </li>
@@ -47,43 +47,44 @@
         </div>
     </nav>
 
-    <!-- Hero / Preço principal (estilo dolarhoje) -->
-    <section class="hero section-padding">
+    <!-- Hero / Preço principal -->
+    <section class="hero">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-12 col-lg-8">
-                    <div class="card bg-dark text-white shadow-lg border-0 rounded-4 overflow-hidden">
-                        <div class="card-body p-4 p-lg-5 text-center position-relative">
-                            <div class="d-flex justify-content-center align-items-center mb-3">
-                                <span class="badge bg-warning text-dark fs-6 fw-bold px-3 py-2">
-                                    <i class="bi bi-clock-history me-1"></i>Atualizado em tempo real
+                    <div class="card hero-card border-0">
+                        <div class="card-body p-4 p-lg-5 text-center">
+                            <div class="d-flex justify-content-center mb-3">
+                                <span class="badge badge-live px-3 py-2">
+                                    <i class="bi bi-broadcast me-1"></i>Atualizado em tempo real
                                 </span>
                             </div>
 
-                            <h1 class="display-3 fw-800 mb-1" id="preco-brl">R$ --,--</h1>
-                            <p class="lead text-warning-500 mb-3">
+                            <h1 class="price-value mb-1" id="preco-brl">R$ --,--</h1>
+                            <p class="price-subtitle mb-3">
                                 <span id="simbolo-principal">₿</span>
-                                <span id="nome-principal">Bitcoin</span> / Real Brasileiro
+                                <span id="nome-principal">Bitcoin</span>
+                                <span class="text-muted-strong">/ Real Brasileiro</span>
                             </p>
 
-                            <div class="d-flex justify-content-center align-items-center gap-3 mb-4">
-                                <span class="text-muted small" id="atualizado-em">--</span>
-                                <button class="btn btn-outline-warning btn-sm rounded-pill" id="btn-atualizar" type="button">
+                            <div class="d-flex justify-content-center align-items-center gap-3 mb-2 flex-wrap">
+                                <span class="text-muted-strong small" id="atualizado-em">--</span>
+                                <button class="btn btn-brand btn-sm rounded-pill px-3" id="btn-atualizar" type="button">
                                     <i class="bi bi-arrow-clockwise"></i> Atualizar
                                 </button>
                             </div>
 
                             <div class="row g-3 mt-4">
                                 <div class="col-6">
-                                    <div class="bg-white/10 p-3 rounded-3 border border-white/10">
-                                        <div class="text-muted small fw-bold">24h</div>
-                                        <div class="fw-bold text-success" id="variacao-24h">--%</div>
+                                    <div class="stat-box">
+                                        <div class="stat-label">Variação 24h</div>
+                                        <div class="stat-value text-success" id="variacao-24h">--%</div>
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="bg-white/10 p-3 rounded-3 border border-white/10">
-                                        <div class="text-muted small fw-bold">Fonte</div>
-                                        <div class="fw-bold text-white small">CoinGecko</div>
+                                    <div class="stat-box">
+                                        <div class="stat-label">Fonte</div>
+                                        <div class="stat-value">CoinGecko</div>
                                     </div>
                                 </div>
                             </div>
@@ -95,11 +96,11 @@
     </section>
 
     <!-- Cards de criptomoedas -->
-    <section id="moedas" class="bg-light section-padding">
+    <section id="moedas" class="coins-section">
         <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="fw-bold mb-3">Preço em outras criptomoedas</h2>
-                <p class="text-muted">Clique em uma criptomoeda para ver a cotação em Real no destaque acima</p>
+            <div class="text-center mb-4">
+                <h2 class="section-title mb-2">Preço em outras criptomoedas</h2>
+                <p class="section-subtitle mb-0">Clique em uma criptomoeda para ver a cotação em Real no destaque acima</p>
             </div>
 
             <div class="row g-3" id="grid-moedas">
@@ -109,9 +110,12 @@
     </section>
 
     <!-- Rodapé -->
-    <footer class="bg-dark text-white-50 py-4 mt-5">
+    <footer class="site-footer py-4">
         <div class="container text-center">
-            <p class="mb-0 small">&copy; 2026 <a href="https://github.com/israelcena/btc-preco" class="text-warning text-decoration-none">Crypto Preço</a>. Dados via <a href="https://www.coingecko.com/" class="text-warning text-decoration-none" target="_blank">CoinGecko API</a>.</p>
+            <p class="mb-0 small">
+                &copy; 2026 <a href="https://github.com/israelcena/btc-preco" class="footer-link">Crypto Preço</a>.
+                Dados via <a href="https://www.coingecko.com/" class="footer-link" target="_blank" rel="noopener">CoinGecko API</a>.
+            </p>
         </div>
     </footer>
 
